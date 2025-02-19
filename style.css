@@ -34,8 +34,15 @@ h2 {
     margin-bottom: 10px;
 }
 
+h6 {
+    font-size: 15px;
+    
+    
+
+}
+
 button {
-    background-color: #d3cdd2; 
+    background-color: #bbbbbb; 
     color: white;
     font-size: 15px;
     border: none;
@@ -50,10 +57,9 @@ button {
 }
 
 button:hover {
-    background-color: #1c90fc; 
+    background-color: #0077ff; 
     transform: scale(1.1);
 }
-
 
 .task {
     background: #ddd;

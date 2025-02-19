@@ -18,8 +18,8 @@ function showTaskForm(priority) {
             <textarea id="taskDesc" class="form-control" placeholder="Descrição da tarefa"></textarea>
         </div>
         <div class="d-flex justify-content-end gap-2">
-            <button class="btn btn-primary" onclick="addTask('${priority}')">Adicionar</button>
-            <button class="btn btn-secondary" onclick="closeTaskForm()">Cancelar</button>
+            <button class="btn btn-outline-info btn-sm w-100 d-flex align-items-center justify-content-center" onclick="addTask('${priority}')">Adicionar</button>
+            <button class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center" onclick="closeTaskForm()">Cancelar</button>
         </div>
     `;
     
@@ -52,7 +52,7 @@ function addTask(priority) {
     checkbox.classList.add("form-check-input", "me-2");
     checkbox.onchange = () => taskDiv.classList.toggle("completed");
     
-    const titleElem = document.createElement("h5");
+    const titleElem = document.createElement("h6");
     titleElem.textContent = title;
     titleElem.classList.add("card-title");
     
@@ -61,7 +61,7 @@ function addTask(priority) {
     descElem.classList.add("card-text");
     
     const removeBtn = document.createElement("button");
-    removeBtn.textContent = "❌";
+    removeBtn.textContent = "x";
     removeBtn.classList.add("btn", "btn-danger", "btn-sm", "ms-auto");
     removeBtn.onclick = () => taskDiv.remove();
     
