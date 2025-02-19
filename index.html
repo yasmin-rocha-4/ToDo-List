@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <div class="container">
+        <div class="column" id="prioridade-baixa" ondrop="drop(event, 'prioridade-baixa')" ondragover="allowDrop(event)">
+            <h2>Prioridade Baixa <button onclick="addTask('prioridade-baixa')">+</button></h2>
+        </div>
+        <div class="column" id="prioridade-media" ondrop="drop(event, 'prioridade-media')" ondragover="allowDrop(event)">
+            <h2>Prioridade Média <button onclick="addTask('prioridade-media')">+</button></h2>
+        </div>
+        <div class="column" id="prioridade-alta" ondrop="drop(event, 'prioridade-alta')" ondragover="allowDrop(event)">
+            <h2>Prioridade Alta <button onclick="addTask('prioridade-alta')">+</button></h2>
+        </div>
+    </div>
+</body>
+</html>
