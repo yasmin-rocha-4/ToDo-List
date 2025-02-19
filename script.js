@@ -1,26 +1,84 @@
-let taskCount = 0; 
+let taskCount = 0;
 
-function addTask(priority) { 
-    const taskDiv = document.createElement("div");
+function showTaskForm(priority) {
+    closeTaskForm(); // Remove qualquer formulário existente antes de abrir um novo
     
-
-    taskCount++;
-    const taskId = "task-" + taskCount;
-    taskDiv.id = taskId; 
-
-    taskDiv.classList.add("task", priority);
-    taskDiv.setAttribute("contenteditable", true); 
-    taskDiv.setAttribute("draggable", true);
-    taskDiv.ondragstart = drag;
-    taskDiv.ondragend = dragEnd; 
-    taskDiv.onblur = () => saveTask(taskDiv);
-    taskDiv.textContent = "Nova Tarefa";
-    taskDiv.onclick = () => clearPlaceholder(taskDiv); //Limpar o texto quando clicar no campo de digitação
-    taskDiv.oninput = () => clearPlaceholder(taskDiv); //Limpar o texto quando começar a digitar
-    taskDiv.onkeydown = (event) => handleEnterKey(event, taskDiv, priority); //Criar a tarefa ao clicar em enter
-    document.getElementById(priority).appendChild(taskDiv);
-    taskDiv.focus();
+    const column = document.getElementById(priority);
+    const formDiv = document.createElement("div");
+    formDiv.id = "taskForm";
+    formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light");
+    
+    formDiv.innerHTML = `
+        <div class="mb-3">
+            <label for="taskTitle" class="form-label">Título da tarefa</label>
+            <input type="text" id="taskTitle" class="form-control" placeholder="Título da tarefa">
+        </div>
+        <div class="mb-3">
+            <label for="taskDesc" class="form-label">Descrição</label>
+            <textarea id="taskDesc" class="form-control" placeholder="Descrição da tarefa"></textarea>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-primary" onclick="addTask('${priority}')">Adicionar</button>
+            <button class="btn btn-secondary" onclick="closeTaskForm()">Cancelar</button>
+        </div>
+    `;
+    
+    column.appendChild(formDiv);
 }
+
+function closeTaskForm() {
+    const existingForm = document.getElementById("taskForm");
+    if (existingForm) {
+        existingForm.remove();
+    }
+}
+
+function addTask(priority) {
+    const title = document.getElementById("taskTitle").value.trim();
+    const desc = document.getElementById("taskDesc").value.trim();
+    
+    if (!title) {
+        alert("O título da tarefa não pode estar vazio!");
+        return;
+    }
+    
+    taskCount++;
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priority);
+    taskDiv.id = "task-" + taskCount;
+    
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("form-check-input", "me-2");
+    checkbox.onchange = () => taskDiv.classList.toggle("completed");
+    
+    const titleElem = document.createElement("h5");
+    titleElem.textContent = title;
+    titleElem.classList.add("card-title");
+    
+    const descElem = document.createElement("p");
+    descElem.textContent = desc;
+    descElem.classList.add("card-text");
+    
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "❌";
+    removeBtn.classList.add("btn", "btn-danger", "btn-sm", "ms-auto");
+    removeBtn.onclick = () => taskDiv.remove();
+    
+    const taskHeader = document.createElement("div");
+    taskHeader.classList.add("d-flex", "align-items-center");
+    taskHeader.appendChild(checkbox);
+    taskHeader.appendChild(titleElem);
+    taskHeader.appendChild(removeBtn);
+    
+    taskDiv.appendChild(taskHeader);
+    taskDiv.appendChild(descElem);
+    
+    document.getElementById(priority).appendChild(taskDiv);
+    closeTaskForm();
+}
+
+
 
 function clearPlaceholder(task) {
     if (task.textContent === "Nova Tarefa") {
