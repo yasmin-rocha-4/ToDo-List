@@ -18,8 +18,8 @@ function showTaskForm(priority) {
             <textarea id="taskDesc" class="form-control" placeholder="Descrição da tarefa"></textarea>
         </div>
         <div class="d-flex justify-content-end gap-2">
-            <button class="btn btn-primary" onclick="addTask('${priority}')">Adicionar</button>
-            <button class="btn btn-secondary" onclick="closeTaskForm()">Cancelar</button>
+            <button class="btn btn-outline-info btn-sm w-100" onclick="addTask('${priority}')">Adicionar</button>
+            <button class="btn btn-outline-danger btn-sm w-100" onclick="closeTaskForm()">Cancelar</button>
         </div>
     `;
     
@@ -47,12 +47,17 @@ function addTask(priority) {
     taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priority);
     taskDiv.id = "task-" + taskCount;
     
+    // Adiciona os eventos de drag para permitir movimentação
+    taskDiv.setAttribute("draggable", true);
+    taskDiv.ondragstart = drag;
+    taskDiv.ondragend = dragEnd;
+    
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.classList.add("form-check-input", "me-2");
     checkbox.onchange = () => taskDiv.classList.toggle("completed");
     
-    const titleElem = document.createElement("h5");
+    const titleElem = document.createElement("h6");
     titleElem.textContent = title;
     titleElem.classList.add("card-title");
     
@@ -61,7 +66,7 @@ function addTask(priority) {
     descElem.classList.add("card-text");
     
     const removeBtn = document.createElement("button");
-    removeBtn.textContent = "❌";
+    removeBtn.textContent = "x";
     removeBtn.classList.add("btn", "btn-danger", "btn-sm", "ms-auto");
     removeBtn.onclick = () => taskDiv.remove();
     
@@ -78,33 +83,12 @@ function addTask(priority) {
     closeTaskForm();
 }
 
-
-
-function clearPlaceholder(task) {
-    if (task.textContent === "Nova Tarefa") {
-        task.textContent = "";
-    }
-}
-
-function handleEnterKey(event, task, priority) {
-    if (event.key === "Enter") {
-     
-        event.preventDefault();
-        
-  
-        if (task.textContent === "Nova Tarefa") {
-            task.textContent = "";
-        }
-        saveTask(task, priority);
-    }
-}
-
 function allowDrop(event) {
     event.preventDefault();
 }
 
 function drag(event) {
-    event.dataTransfer.setData("text", event.target.id); 
+    event.dataTransfer.setData("text", event.target.id);
     event.target.classList.add("dragging");
 }
 
@@ -114,29 +98,12 @@ function dragEnd(event) {
 
 function drop(event, priority) {
     event.preventDefault();
-
+    
     const data = event.dataTransfer.getData("text");
-    const draggedElement = document.getElementById(data); 
-
+    const draggedElement = document.getElementById(data);
+    
     draggedElement.classList.remove("prioridade-baixa", "prioridade-media", "prioridade-alta");
     draggedElement.classList.add(priority);
-
+    
     document.getElementById(priority).appendChild(draggedElement);
-}
-
-function saveTask(task, priority) {
-    if (!task.textContent.trim() || task.textContent === "Nova Tarefa") {
-        task.remove();
-    } else {
-
-        task.setAttribute("contenteditable", false); 
-        task.setAttribute("draggable", true); //Arrastar a tarefa após salvar
-        task.classList.add("task"); //Estilizar a tarefa
-        task.onclick = () => makeEditable(task); //Editar a tarefa ao clicar
-    }
-}
-
-function makeEditable(task) {
-    task.setAttribute("contenteditable", true);
-    task.focus();
 }
