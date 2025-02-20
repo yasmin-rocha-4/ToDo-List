@@ -7,7 +7,7 @@ body {
     text-align: center;
 }
 header {
-    background-image: url('https://static.canva.com/web/images/4a825d24e6fb578c2ff6061aade52217.jpg'); 
+    background-image: url('/img/cabecalho.webp'); 
     background-position: center;
     height: 200px; /* Ajuste conforme necessário */
     display: flex;
@@ -129,7 +129,7 @@ button {
 }
 
 button:hover {
-    background-color: rgb(64, 69, 73);
+    background-color: rgb(5, 187, 219);
     transform: scale(1.1);
 }
 
