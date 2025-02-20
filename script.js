@@ -46,12 +46,10 @@ function addTask(priority) {
     const taskDiv = document.createElement("div");
     taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priority);
     taskDiv.id = "task-" + taskCount;
-
     taskDiv.setAttribute("draggable", true);
     taskDiv.ondragstart = drag;
     taskDiv.ondragend = dragEnd;
 
-   
     const removeBtn = document.createElement("button");
     removeBtn.innerHTML = "&times;";
     removeBtn.classList.add("remove-btn");
@@ -65,14 +63,15 @@ function addTask(priority) {
     const titleElem = document.createElement("h6");
     titleElem.textContent = title;
     titleElem.classList.add("card-title");
+    titleElem.onclick = () => makeEditable(titleElem);
 
     const descElem = document.createElement("p");
     descElem.textContent = desc;
     descElem.classList.add("card-text");
+    descElem.onclick = () => makeEditable(descElem);
 
     const taskHeader = document.createElement("div");
     taskHeader.classList.add("task-header");
-
     taskHeader.appendChild(checkbox);  
     taskHeader.appendChild(titleElem);
     taskHeader.appendChild(removeBtn); 
@@ -84,6 +83,21 @@ function addTask(priority) {
     closeTaskForm();
 }
 
+function makeEditable(element) {
+    element.contentEditable = true;
+    element.focus();
+    
+    element.onblur = () => {
+        element.contentEditable = false;
+    };
+
+    element.onkeypress = (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            element.blur();
+        }
+    };
+}
 
 function allowDrop(event) {
     event.preventDefault();
@@ -100,12 +114,9 @@ function dragEnd(event) {
 
 function drop(event, priority) {
     event.preventDefault();
-
     const data = event.dataTransfer.getData("text");
     const draggedElement = document.getElementById(data);
-
     draggedElement.classList.remove("prioridade-baixa", "prioridade-media", "prioridade-alta");
     draggedElement.classList.add(priority);
-
     document.getElementById(priority).appendChild(draggedElement);
 }

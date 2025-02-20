@@ -9,11 +9,11 @@ body {
 header {
     background-image: url('/img/cabecalho.webp'); 
     background-position: center;
-    height: 200px; /* Ajuste conforme necessário */
+    height: 200px; 
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgb(255, 255, 255); /* Cor do texto */
+    color: rgb(255, 255, 255); 
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     font-size: 24px;
 }
@@ -47,8 +47,9 @@ h2 {
 
 .task-header h6 {
     flex-grow: 1;
+    font-weight: bold;
     text-align: left;
-    margin-left: 10px;
+    margin: 0;
 }
 
 .task {
@@ -61,19 +62,18 @@ h2 {
     flex-direction: column;
     align-items: flex-start;
 }
-
 .task-header {
     display: flex;
-    align-items: center;
+    align-items: center; 
     width: 100%;
-    justify-content: space-between;
+    gap: 5px; 
 }
 
 
 .task-header input {
-    margin-right: 10px;
+    margin: 0; 
+    vertical-align: middle;
 }
-
 
 .remove-btn {
     background-color: rgb(177, 179, 180);
@@ -98,9 +98,11 @@ h2 {
 }
 
 .task p {
-    margin: 10px 0 0 70px; 
+    margin: 10px 10 0 0; 
     text-align: left;
     width: 100%;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .task {
