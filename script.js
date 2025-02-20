@@ -1,13 +1,13 @@
 let taskCount = 0;
 
 function showTaskForm(priority) {
-    closeTaskForm(); // Remove qualquer formulário existente antes de abrir um novo
-    
+    closeTaskForm();
+
     const column = document.getElementById(priority);
     const formDiv = document.createElement("div");
     formDiv.id = "taskForm";
     formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light");
-    
+
     formDiv.innerHTML = `
         <div class="mb-3">
             <label for="taskTitle" class="form-label">Título da tarefa</label>
@@ -22,7 +22,7 @@ function showTaskForm(priority) {
             <button class="btn btn-outline-danger btn-sm w-100" onclick="closeTaskForm()">Cancelar</button>
         </div>
     `;
-    
+
     column.appendChild(formDiv);
 }
 
@@ -36,52 +36,54 @@ function closeTaskForm() {
 function addTask(priority) {
     const title = document.getElementById("taskTitle").value.trim();
     const desc = document.getElementById("taskDesc").value.trim();
-    
+
     if (!title) {
-        alert("O título da tarefa não pode estar vazio!");
+        alert("Insira um título e uma descrição para a tarefa.");
         return;
     }
-    
+
     taskCount++;
     const taskDiv = document.createElement("div");
     taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priority);
     taskDiv.id = "task-" + taskCount;
-    
-    // Adiciona os eventos de drag para permitir movimentação
+
     taskDiv.setAttribute("draggable", true);
     taskDiv.ondragstart = drag;
     taskDiv.ondragend = dragEnd;
-    
+
+    // Criando o botão de remover com X estilizado
+    const removeBtn = document.createElement("button");
+    removeBtn.innerHTML = "&times;";
+    removeBtn.classList.add("remove-btn");
+    removeBtn.onclick = () => taskDiv.remove();
+
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.classList.add("form-check-input", "me-2");
+    checkbox.classList.add("form-check-input");
     checkbox.onchange = () => taskDiv.classList.toggle("completed");
-    
+
     const titleElem = document.createElement("h6");
     titleElem.textContent = title;
     titleElem.classList.add("card-title");
-    
+
     const descElem = document.createElement("p");
     descElem.textContent = desc;
     descElem.classList.add("card-text");
-    
-    const removeBtn = document.createElement("button");
-    removeBtn.textContent = "x";
-    removeBtn.classList.add("btn", "btn-danger", "btn-sm", "ms-auto");
-    removeBtn.onclick = () => taskDiv.remove();
-    
+
     const taskHeader = document.createElement("div");
-    taskHeader.classList.add("d-flex", "align-items-center");
-    taskHeader.appendChild(checkbox);
+    taskHeader.classList.add("task-header");
+
+    taskHeader.appendChild(checkbox);  
     taskHeader.appendChild(titleElem);
-    taskHeader.appendChild(removeBtn);
-    
+    taskHeader.appendChild(removeBtn); 
+
     taskDiv.appendChild(taskHeader);
     taskDiv.appendChild(descElem);
-    
+
     document.getElementById(priority).appendChild(taskDiv);
     closeTaskForm();
 }
+
 
 function allowDrop(event) {
     event.preventDefault();
@@ -98,12 +100,12 @@ function dragEnd(event) {
 
 function drop(event, priority) {
     event.preventDefault();
-    
+
     const data = event.dataTransfer.getData("text");
     const draggedElement = document.getElementById(data);
-    
+
     draggedElement.classList.remove("prioridade-baixa", "prioridade-media", "prioridade-alta");
     draggedElement.classList.add(priority);
-    
+
     document.getElementById(priority).appendChild(draggedElement);
 }

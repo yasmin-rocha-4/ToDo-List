@@ -34,11 +34,72 @@ h2 {
     margin-bottom: 10px;
 }
 
-h6 {
-    font-size: 15px;
-    
-    
+.task-header h6 {
+    flex-grow: 1;
+    text-align: left;
+    margin-left: 10px;
+}
 
+.task {
+    background: #ddd;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.task-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+
+.task-header input {
+    margin-right: 10px;
+}
+
+
+.remove-btn {
+    background-color: rgb(177, 179, 180);
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-left: auto; 
+}
+
+
+.remove-btn:hover {
+    background-color: rgb(64, 69, 73);
+    transform: scale(1.1);
+}
+
+.task p {
+    margin: 10px 0 0 70px; 
+    text-align: left;
+    width: 100%;
+}
+
+.task {
+    background: #ddd;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
 }
 
 button {
@@ -57,19 +118,10 @@ button {
 }
 
 button:hover {
-    background-color: #0077ff; 
+    background-color: #008cff; 
     transform: scale(1.1);
 }
 
-.task {
-    background: #ddd;
-    padding: 10px;
-    margin: 20px 0;
-    border-radius: 5px;
-    cursor: grab;
-    display: flex;
-    align-items: center;
-}
 
 .prioridade-baixa {
     border-left: 5px solid green;
