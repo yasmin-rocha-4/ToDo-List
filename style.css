@@ -118,7 +118,7 @@ button {
 }
 
 button:hover {
-    background-color: #008cff; 
+    background-color: rgb(64, 69, 73);
     transform: scale(1.1);
 }
 

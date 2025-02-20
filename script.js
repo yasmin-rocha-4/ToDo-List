@@ -10,11 +10,11 @@ function showTaskForm(priority) {
 
     formDiv.innerHTML = `
         <div class="mb-3">
-            <label for="taskTitle" class="form-label">Título da tarefa</label>
+            <label for="taskTitle" class="form-label">O que precisa ser feito?</label>
             <input type="text" id="taskTitle" class="form-control" placeholder="Título da tarefa">
         </div>
         <div class="mb-3">
-            <label for="taskDesc" class="form-label">Descrição</label>
+            <label for="taskDesc" class="form-label">Detalhes adicionais (opcional)</label>
             <textarea id="taskDesc" class="form-control" placeholder="Descrição da tarefa"></textarea>
         </div>
         <div class="d-flex justify-content-end gap-2">
@@ -51,7 +51,7 @@ function addTask(priority) {
     taskDiv.ondragstart = drag;
     taskDiv.ondragend = dragEnd;
 
-    // Criando o botão de remover com X estilizado
+   
     const removeBtn = document.createElement("button");
     removeBtn.innerHTML = "&times;";
     removeBtn.classList.add("remove-btn");
