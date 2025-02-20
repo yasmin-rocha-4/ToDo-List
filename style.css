@@ -75,6 +75,11 @@ h2 {
     vertical-align: middle;
 }
 
+.task-header input:checked {
+    background-color: #28a745 !important; 
+    border-color: #28a745 !important; 
+}
+
 .remove-btn {
     background-color: rgb(177, 179, 180);
     color: white;
