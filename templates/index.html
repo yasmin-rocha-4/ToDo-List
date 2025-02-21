@@ -9,22 +9,21 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="/static/js/script.js" defer></script>
 </head>
-<body>
+<body onload="updateTasks()">
     <header>
     <h1>To-Do List</h1>
 </header>
     <div class="container">
-        <div class="column" id="prioridade-baixa" ondrop="drop(event, 'prioridade-baixa')" ondragover="allowDrop(event)">
-            <h2>Prioridade Baixa <button onclick="showTaskForm('prioridade-baixa')">+</button></h2>
+        <div class="column" id="l" ondrop="drop(event, 'prioridade-baixa')" ondragover="allowDrop(event)">
+            <h2>Prioridade Baixa <button onclick="showTaskForm('l')">+</button></h2>
         </div>
-        <div class="column" id="prioridade-media" ondrop="drop(event, 'prioridade-media')" ondragover="allowDrop(event)">
-            <h2>Prioridade Média <button onclick="showTaskForm('prioridade-media')">+</button></h2>
+        <div class="column" id="m" ondrop="drop(event, 'prioridade-media')" ondragover="allowDrop(event)">
+            <h2>Prioridade Média <button onclick="showTaskForm('m')">+</button></h2>
         </div>
-        <div class="column" id="prioridade-alta" ondrop="drop(event, 'prioridade-alta')" ondragover="allowDrop(event)">
-            <h2>Prioridade Alta <button onclick="showTaskForm('prioridade-alta')">+</button></h2>
+        <div class="column" id="h" ondrop="drop(event, 'prioridade-alta')" ondragover="allowDrop(event)">
+            <h2>Prioridade Alta <button onclick="showTaskForm('h')">+</button></h2>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
 </body>
 </html>
