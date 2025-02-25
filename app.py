@@ -75,6 +75,30 @@ def delete_task(id:int):
     db.session.commit()
     return Response(status=200)
 
+@app.route('/update-task/<int:id>', methods=['PUT'])
+def update_task(id):
+    data = request.get_json()
+    task = Task.query.get(id)
+
+    if not task:
+        return Response(status=404, response="Task não encontrada")
+
+    # Atualiza os campos se estiverem no JSON da requisição
+    if 'title' in data:
+        task.title = data['title']
+    if 'description' in data:
+        task.description = data['description']
+    if 'priority' in data:
+        task.priority = PriorityEnum(data['priority'])
+    if 'done' in data:
+        task.done = data['done']
+    if 'date' in data:
+        task.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+
+    db.session.commit()
+    return Response(status=200, response="Task atualizada com sucesso")
+
+
 # initializes the sqlite db, if not initialized yet.
 with app.app_context():
     db.create_all()
