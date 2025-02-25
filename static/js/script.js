@@ -63,7 +63,7 @@ function addTask(priority) {
     sendTaskToAPI(task);
 
     taskCount++;
-    const taskDiv = document.createElement("div");
+    const taskDiv = document.createElement("card");
     taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priority);
     taskDiv.id = "task-" + taskCount;
     taskDiv.setAttribute("draggable", true);
@@ -134,7 +134,8 @@ function updateTasks() {
             const priorities = ['l', 'm', 'h'];
             priorities.forEach(priority => {
                 const column = document.getElementById(priority);
-                column.innerHTML = '';
+                const tasks = column.querySelectorAll('.task');
+                tasks.forEach(task => task.remove());
             });
             data.forEach(task => {
                 addTaskFromAPI(task);
@@ -154,7 +155,10 @@ function addTaskFromAPI(task) {
     const removeBtn = document.createElement("button");
     removeBtn.innerHTML = "&times;";
     removeBtn.classList.add("remove-btn");
-    removeBtn.onclick = () => taskDiv.remove();
+    removeBtn.onclick = () => {
+        taskDiv.remove();
+        deleteTaskFromAPI(task.id);
+    };
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -183,7 +187,20 @@ function addTaskFromAPI(task) {
     document.getElementById(task.priority).appendChild(taskDiv);
 }
 
-setInterval(updateTasks, 5000); // Atualiza a lista de tasks a cada 5 segundos
+setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos
+
+function deleteTaskFromAPI(taskId) {
+    fetch("http://http://127.0.0.1:5000/delete-task", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ id: taskId })
+    })
+     .then(response => response.json())
+     .then(data => console.log('Success:', data))
+     .catch(error => console.error('Error:', error));
+}
 
 function makeEditable(element) {
     element.contentEditable = true;

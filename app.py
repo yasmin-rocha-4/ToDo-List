@@ -64,7 +64,7 @@ def add_task():
 
     return Response(status=200)
 
-@app.route('/delete-task', methods=['POST'])
+@app.route('/delete-task', methods=['DELETE'])
 def delete_task():
     data = request.get_json()
     task = Task.query.get(data['id'])
