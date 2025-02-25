@@ -15,13 +15,16 @@
 </header>
     <div class="container">
         <div class="column" id="l" ondrop="drop(event, 'prioridade-baixa')" ondragover="allowDrop(event)">
-            <h2>Prioridade Baixa <button onclick="showTaskForm('l')">+</button></h2>
+            <h2 class="titlePriorities">Prioridade Baixa</h2>
+            <button onclick="showTaskForm('l')">+</button>
         </div>
         <div class="column" id="m" ondrop="drop(event, 'prioridade-media')" ondragover="allowDrop(event)">
-            <h2>Prioridade Média <button onclick="showTaskForm('m')">+</button></h2>
+            <h2 class="titlePriorities">Prioridade Média</h2>
+            <button onclick="showTaskForm('m')">+</button>
         </div>
         <div class="column" id="h" ondrop="drop(event, 'prioridade-alta')" ondragover="allowDrop(event)">
-            <h2>Prioridade Alta <button onclick="showTaskForm('h')">+</button></h2>
+            <h2 class="titlePriorities">Prioridade Alta</h2>
+            <button onclick="showTaskForm('h')">+</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

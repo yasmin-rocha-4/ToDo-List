@@ -11,7 +11,7 @@ function showTaskForm(priority) {
 
     const formDiv = document.createElement("div");
     formDiv.id = "taskForm";
-    formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light");
+    formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light", "mt-3");
 
     formDiv.innerHTML = `
         <div class="mb-3">
@@ -61,45 +61,7 @@ function addTask(priority) {
     }
 
     sendTaskToAPI(task);
-
-    taskCount++;
-    const taskDiv = document.createElement("card");
-    taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priority);
-    taskDiv.id = "task-" + taskCount;
-    taskDiv.setAttribute("draggable", true);
-    taskDiv.ondragstart = drag;
-    taskDiv.ondragend = dragEnd;
-
-    const removeBtn = document.createElement("button");
-    removeBtn.innerHTML = "&times;";
-    removeBtn.classList.add("remove-btn");
-    removeBtn.onclick = () => taskDiv.remove();
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.classList.add("form-check-input");
-    checkbox.onchange = () => taskDiv.classList.toggle("completed");
-
-    const titleElem = document.createElement("h6");
-    titleElem.textContent = title;
-    titleElem.classList.add("card-title");
-    titleElem.onclick = () => makeEditable(titleElem);
-
-    const descElem = document.createElement("p");
-    descElem.textContent = desc;
-    descElem.classList.add("card-text");
-    descElem.onclick = () => makeEditable(descElem);
-
-    const taskHeader = document.createElement("div");
-    taskHeader.classList.add("task-header");
-    taskHeader.appendChild(checkbox);  
-    taskHeader.appendChild(titleElem);
-    taskHeader.appendChild(removeBtn); 
-
-    taskDiv.appendChild(taskHeader);
-    taskDiv.appendChild(descElem);
-
-    document.getElementById(priority).appendChild(taskDiv);
+    addTaskFromAPI(task);
     closeTaskForm();
 }
 
@@ -175,6 +137,11 @@ function addTaskFromAPI(task) {
     descElem.classList.add("card-text");
     descElem.onclick = () => makeEditable(descElem);
 
+    const dateElem = document.createElement("small");
+    dateElem.textContent = `Data da tarefa: ${task.date}`;
+    dateElem.classList.add("card-text");
+    dateElem.onclick = () => makeEditable(dateElem);
+
     const taskHeader = document.createElement("div");
     taskHeader.classList.add("task-header");
     taskHeader.appendChild(checkbox);  
@@ -183,23 +150,28 @@ function addTaskFromAPI(task) {
 
     taskDiv.appendChild(taskHeader);
     taskDiv.appendChild(descElem);
+    taskDiv.appendChild(dateElem);
 
     document.getElementById(task.priority).appendChild(taskDiv);
 }
 
-setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos
+setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos, se precisar comenta para trabalhar no front sem atualizar a lista de tasks
 
 function deleteTaskFromAPI(taskId) {
-    fetch("http://http://127.0.0.1:5000/delete-task", {
+    fetch(`http://127.0.0.1:5000/delete-task/${taskId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ id: taskId })
+        }
     })
-     .then(response => response.json())
-     .then(data => console.log('Success:', data))
-     .catch(error => console.error('Error:', error));
+    .then(response => {
+        if (response.status === 200) {
+            console.log('Task deletada com sucesso');
+        } else {
+            console.error('Ocorreu um erro ao deletar a task');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 function makeEditable(element) {

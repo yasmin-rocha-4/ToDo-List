@@ -62,12 +62,11 @@ def add_task():
     # Criar a nova tarefa
     Task.new(data['title'], data['description'], data['priority'], data['done'], data['date'])
 
-    return Response(status=200)
+    return Response(status=200, response='Task adicionada com sucesso')
 
-@app.route('/delete-task', methods=['DELETE'])
-def delete_task():
-    data = request.get_json()
-    task = Task.query.get(data['id'])
+@app.route('/delete-task/<id>', methods=['DELETE'])
+def delete_task(id:int):
+    task = Task.query.filter_by(id=id).first()
 
     if task is None:
         return Response(status=404)
