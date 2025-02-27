@@ -11,6 +11,8 @@ function showTaskForm(priority) {
 
     const formDiv = document.createElement("div");
     formDiv.id = "taskForm";
+
+
     formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light", "mt-3");
 
     formDiv.innerHTML = `
@@ -61,8 +63,9 @@ function addTask(priority) {
     }
 
     sendTaskToAPI(task);
-    addTaskFromAPI(task);
+    addTaskFromAPI(task); //del? 
     closeTaskForm();
+    updateTasks(); // Atualiza a lista de tarefas após adicionar uma nova
 }
 
 function sendTaskToAPI(task) {
@@ -73,20 +76,23 @@ function sendTaskToAPI(task) {
         },
         body: JSON.stringify(task)
     })
-     .then(response => response.json())
-     .then(data => console.log('Success:', data))
-     .catch(error => console.error('Error:', error));
+        .then(response => response.json()) // Espera o JSON da resposta
+        .then(data => {
+            console.log('Success:', data);
+            addTaskFromAPI(data); // Agora adicionamos a tarefa com o ID correto vindo do back
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function getTasksFromAPI() {
     fetch("http://127.0.0.1:5000/get-tasks")
-     .then(response => response.json())
-     .then(data => {
-         data.forEach(task => {
-             addTaskFromAPI(task);
-         });
-     })
-     .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(task => {
+                addTaskFromAPI(task);
+            });
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function updateTasks() {
@@ -108,7 +114,12 @@ function updateTasks() {
 
 function addTaskFromAPI(task) {
     const taskDiv = document.createElement("div");
-    taskDiv.classList.add("task", "card", "p-3", "shadow-sm", task.priority);
+    let priorityClass = "";
+    if (task.priority === "l") priorityClass = "prioridade-baixa";
+    else if (task.priority === "m") priorityClass = "prioridade-media";
+    else if (task.priority === "h") priorityClass = "prioridade-alta";
+
+    taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priorityClass);
     taskDiv.id = "task-" + task.id;
     taskDiv.setAttribute("draggable", true);
     taskDiv.ondragstart = drag;
@@ -125,7 +136,11 @@ function addTaskFromAPI(task) {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.classList.add("form-check-input");
-    checkbox.onchange = () => taskDiv.classList.toggle("completed");
+    checkbox.checked = task.done; // Define o estado inicial da checkbox
+    checkbox.onchange = () => {
+        taskDiv.classList.toggle("completed");
+        updateTaskDoneStatus(task.id, checkbox.checked); // Atualiza o status no backend
+    };
 
     const titleElem = document.createElement("h6");
     titleElem.textContent = task.title;
@@ -144,18 +159,38 @@ function addTaskFromAPI(task) {
 
     const taskHeader = document.createElement("div");
     taskHeader.classList.add("task-header");
-    taskHeader.appendChild(checkbox);  
+    taskHeader.appendChild(checkbox);
     taskHeader.appendChild(titleElem);
-    taskHeader.appendChild(removeBtn); 
+    taskHeader.appendChild(removeBtn);
 
     taskDiv.appendChild(taskHeader);
     taskDiv.appendChild(descElem);
     taskDiv.appendChild(dateElem);
 
     document.getElementById(task.priority).appendChild(taskDiv);
+    updateTaskField(taskId, field, newValue);
 }
-
+/* Comentei isso pq era o que dava erro no UPDATE. Ao recriar as tasks a cada segundo, não era possível alterá-las. 
 setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos, se precisar comenta para trabalhar no front sem atualizar a lista de tasks
+*/
+
+//Adicionei essa função e ao final de cada modificacao das tarefas (Add, Delete, Update), precisamos chamá-la 
+function updateTasks() {
+    fetch("http://127.0.0.1:5000/get-tasks")
+        .then(response => response.json())
+        .then(data => {
+            const priorities = ['l', 'm', 'h'];
+            priorities.forEach(priority => {
+                const column = document.getElementById(priority);
+                const tasks = column.querySelectorAll('.task');
+                tasks.forEach(task => task.remove()); // Remove todas as tarefas da coluna
+            });
+            data.forEach(task => {
+                addTaskFromAPI(task); // Adiciona as tarefas atualizadas
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
 
 function deleteTaskFromAPI(taskId) {
     fetch(`http://127.0.0.1:5000/delete-task/${taskId}`, {
@@ -167,6 +202,7 @@ function deleteTaskFromAPI(taskId) {
     .then(response => {
         if (response.status === 200) {
             console.log('Task deletada com sucesso');
+            updateTasks(); // Atualiza a lista de tarefas após excluir
         } else {
             console.error('Ocorreu um erro ao deletar a task');
         }
@@ -177,9 +213,17 @@ function deleteTaskFromAPI(taskId) {
 function makeEditable(element) {
     element.contentEditable = true;
     element.focus();
-    
+
     element.onblur = () => {
         element.contentEditable = false;
+        const taskId = element.closest('.task').id.split("-")[1]; // Extrai o ID da tarefa
+        const field = element.classList.contains("card-title") ? "title" :
+                      element.classList.contains("card-text") ? "description" :
+                      "date";
+        const newValue = element.textContent.trim();
+
+        // Atualiza o campo no backend
+        updateTaskField(taskId, field, newValue);
     };
 
     element.onkeypress = (event) => {
@@ -187,6 +231,11 @@ function makeEditable(element) {
             event.preventDefault();
             element.blur();
         }
+    };
+
+    // Impede que o evento de arrastar seja acionado ao clicar para editar
+    element.ondragstart = (event) => {
+        event.stopPropagation();
     };
 }
 
@@ -207,7 +256,75 @@ function drop(event, priority) {
     event.preventDefault();
     const data = event.dataTransfer.getData("text");
     const draggedElement = document.getElementById(data);
+    const taskId = draggedElement.id.split("-")[1]; // Extrai o ID da tarefa
+
+    // Atualiza a classe visual da tarefa
     draggedElement.classList.remove("prioridade-baixa", "prioridade-media", "prioridade-alta");
     draggedElement.classList.add(priority);
+
+    // Move a tarefa para a nova coluna
     document.getElementById(priority).appendChild(draggedElement);
+
+    // Atualiza a prioridade no backend
+    updateTaskPriority(taskId, priority);
+}
+
+function updateTaskPriority(taskId, newPriority) {
+    fetch(`http://127.0.0.1:5000/update-task/${taskId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ priority: newPriority })
+    })
+    .then(response => {
+        if (response.status === 200) {
+            console.log('Prioridade atualizada com sucesso');
+            updateTasks(); // Atualiza a lista de tarefas após alterar a prioridade
+        } else {
+            console.error('Erro ao atualizar a prioridade');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function updateTaskDoneStatus(taskId, isDone) {
+    fetch(`http://127.0.0.1:5000/update-task/${taskId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ done: isDone })
+    })
+    .then(response => {
+        if (response.status === 200) {
+            console.log('Status "done" atualizado com sucesso');
+            updateTasks(); // Atualiza a lista de tarefas após alterar o status
+        } else {
+            console.error('Erro ao atualizar o status "done"');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function updateTaskField(taskId, field, newValue) {
+    const data = {};
+    data[field] = newValue;
+
+    fetch(`http://127.0.0.1:5000/update-task/${taskId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.status === 200) {
+            console.log(`Campo "${field}" atualizado com sucesso`);
+            updateTasks(); // Atualiza a lista de tarefas após editar o campo
+        } else {
+            console.error(`Erro ao atualizar o campo "${field}"`);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }

@@ -63,14 +63,19 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    user-select: none; /* Impede a seleção de texto ao arrastar */
 }
+
+.task:active {
+    cursor: grabbing; /* Muda o cursor ao arrastar */
+}
+
 .task-header {
     display: flex;
     align-items: center; 
     width: 100%;
     gap: 5px; 
 }
-
 
 .task-header input {
     margin: 0; 
@@ -98,7 +103,6 @@ h2 {
     margin-left: auto; 
 }
 
-
 .remove-btn:hover {
     background-color: rgb(64, 69, 73);
     transform: scale(1.1);
@@ -110,16 +114,6 @@ h2 {
     width: 100%;
     word-wrap: break-word;
     white-space: pre-wrap;
-}
-
-.task {
-    background: #ddd;
-    padding: 10px;
-    margin: 20px 0;
-    border-radius: 5px;
-    cursor: grab;
-    display: flex;
-    align-items: center;
 }
 
 button {
@@ -142,7 +136,6 @@ button:hover {
     transform: scale(1.1);
 }
 
-
 .prioridade-baixa {
     border-left: 5px solid green;
     background: #e6f4ea;
@@ -156,4 +149,10 @@ button:hover {
 .prioridade-alta {
     border-left: 5px solid red;
     background: #fdecea;
+}
+
+.task h6, .task p, .task small {
+    cursor: text; /* Muda o cursor para o padrão de texto ao passar o mouse */
+    user-select: text; /* Permite a seleção de texto */
+    pointer-events: auto; /* Garante que os eventos de clique sejam capturados */
 }
