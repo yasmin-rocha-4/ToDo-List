@@ -63,7 +63,7 @@ function addTask(priority) {
     }
 
     sendTaskToAPI(task);
-    addTaskFromAPI(task); //del? 
+    //addTaskFromAPI(task); //del? 
     closeTaskForm();
     updateTasks(); // Atualiza a lista de tarefas após adicionar uma nova
 }
@@ -103,16 +103,19 @@ function updateTasks() {
             priorities.forEach(priority => {
                 const column = document.getElementById(priority);
                 const tasks = column.querySelectorAll('.task');
-                tasks.forEach(task => task.remove());
+                tasks.forEach(task => task.remove()); // Remove todas as tarefas da coluna
             });
             data.forEach(task => {
-                addTaskFromAPI(task);
+                addTaskFromAPI(task); // Adiciona as tarefas atualizadas
             });
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Erro ao atualizar tarefas:', error));
 }
 
+
 function addTaskFromAPI(task) {
+    //console.log('Adicionando tarefa:', task);  // Verifique o que está sendo passado
+
     const taskDiv = document.createElement("div");
     let priorityClass = "";
     if (task.priority === "l") priorityClass = "prioridade-baixa";
@@ -120,7 +123,7 @@ function addTaskFromAPI(task) {
     else if (task.priority === "h") priorityClass = "prioridade-alta";
 
     taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priorityClass);
-    taskDiv.id = "task-" + task.id;
+    taskDiv.id = "task-" + task.id;  
     taskDiv.setAttribute("draggable", true);
     taskDiv.ondragstart = drag;
     taskDiv.ondragend = dragEnd;
@@ -130,16 +133,16 @@ function addTaskFromAPI(task) {
     removeBtn.classList.add("remove-btn");
     removeBtn.onclick = () => {
         taskDiv.remove();
-        deleteTaskFromAPI(task.id);
+        deleteTaskFromAPI(task.id); 
     };
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.classList.add("form-check-input");
-    checkbox.checked = task.done; // Define o estado inicial da checkbox
+    checkbox.checked = task.done;
     checkbox.onchange = () => {
         taskDiv.classList.toggle("completed");
-        updateTaskDoneStatus(task.id, checkbox.checked); // Atualiza o status no backend
+        updateTaskDoneStatus(task.id, checkbox.checked);
     };
 
     const titleElem = document.createElement("h6");
@@ -168,8 +171,9 @@ function addTaskFromAPI(task) {
     taskDiv.appendChild(dateElem);
 
     document.getElementById(task.priority).appendChild(taskDiv);
-    updateTaskField(taskId, field, newValue);
+    
 }
+
 /* Comentei isso pq era o que dava erro no UPDATE. Ao recriar as tasks a cada segundo, não era possível alterá-las. 
 setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos, se precisar comenta para trabalhar no front sem atualizar a lista de tasks
 */
