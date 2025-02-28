@@ -11,8 +11,6 @@ function showTaskForm(priority) {
 
     const formDiv = document.createElement("div");
     formDiv.id = "taskForm";
-
-
     formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light", "mt-3");
 
     formDiv.innerHTML = `
@@ -114,12 +112,7 @@ function updateTasks() {
 
 function addTaskFromAPI(task) {
     const taskDiv = document.createElement("div");
-    let priorityClass = "";
-    if (task.priority === "l") priorityClass = "prioridade-baixa";
-    else if (task.priority === "m") priorityClass = "prioridade-media";
-    else if (task.priority === "h") priorityClass = "prioridade-alta";
-
-    taskDiv.classList.add("task", "card", "p-3", "shadow-sm", priorityClass);
+    taskDiv.classList.add("task", "card", "p-3", "shadow-sm", task.priority);
     taskDiv.id = "task-" + task.id;
     taskDiv.setAttribute("draggable", true);
     taskDiv.ondragstart = drag;
@@ -168,7 +161,7 @@ function addTaskFromAPI(task) {
     taskDiv.appendChild(dateElem);
 
     document.getElementById(task.priority).appendChild(taskDiv);
-    updateTaskField(taskId, field, newValue);
+    console.log(task); // Isso mostra os dados corretos no console // Verifica os dados retornados da API  
 }
 /* Comentei isso pq era o que dava erro no UPDATE. Ao recriar as tasks a cada segundo, não era possível alterá-las. 
 setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos, se precisar comenta para trabalhar no front sem atualizar a lista de tasks
