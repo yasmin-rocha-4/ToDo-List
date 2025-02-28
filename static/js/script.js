@@ -11,8 +11,6 @@ function showTaskForm(priority) {
 
     const formDiv = document.createElement("div");
     formDiv.id = "taskForm";
-
-
     formDiv.classList.add("task-form", "card", "p-3", "shadow-sm", "bg-light", "mt-3");
 
     formDiv.innerHTML = `
