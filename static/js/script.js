@@ -106,6 +106,8 @@ function updateTasks() {
             data.forEach(task => {
                 addTaskFromAPI(task); // Adiciona as tarefas atualizadas
             });
+
+            reloadTasks();
         })
         .catch(error => console.error('Erro ao atualizar tarefas:', error));
 }
@@ -169,7 +171,6 @@ function addTaskFromAPI(task) {
     taskDiv.appendChild(dateElem);
 
     document.getElementById(task.priority).appendChild(taskDiv);
-    
 }
 
 /* Comentei isso pq era o que dava erro no UPDATE. Ao recriar as tasks a cada segundo, não era possível alterá-las. 
@@ -177,7 +178,7 @@ setInterval(updateTasks, 1000); // Atualiza a lista de tasks a cada 1 segundos, 
 */
 
 //Adicionei essa função e ao final de cada modificacao das tarefas (Add, Delete, Update), precisamos chamá-la 
-function updateTasks() {
+function reloadTasks() {
     fetch("http://127.0.0.1:5000/get-tasks")
         .then(response => response.json())
         .then(data => {
